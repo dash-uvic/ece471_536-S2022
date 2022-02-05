@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $1 == "-h" ]; then
+    echo "USAGE: ./checksum <file> <files md5sum>"
+    exit 0
+fi
+
+file=$1
+sha="$2"
+
+if [ $(sha256sum $file | cut -d' ' -f1) == $sha ]; then 
+    echo "$file checksum matches"; 
+else
+    echo "$file checksum FAILED";
+fi
