@@ -27,14 +27,15 @@ def main(args):
     result = {}
     future = None
     executor = ThreadPoolExecutor(max_workers=1)
+    
+    """ 
+    Use the `current_frame` from either env.step of env.render
+    to determine where to move the scope.
+    
+    current_frame : np.ndarray (width, height, 3), np.uint8, RGB
+    """
+    current_frame = env.render() 
     while True:
-        """ 
-        Use the `current_frame` from either env.step of env.render
-        to determine where to move the scope.
-        
-        current_frame : np.ndarray (width, height, 3), np.uint8, RGB
-        """
-        current_frame = env.render() 
         
         """
             The game needs to continue while you process the previous image so 
@@ -74,8 +75,6 @@ def main(args):
         for res in result:
             coordinate  = res['coordinate']
             move_type   = res['move_type']
-            move_type = "relative"
-            coordinate = (-10,-10)
             current_frame, level_done, game_done, info = env.step(coordinate, move_type)
             if level_done or game_done:
                 break
