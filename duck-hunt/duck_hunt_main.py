@@ -12,7 +12,7 @@ from ece471_duckhunt.envs import duckhunt_env
 from solution import GetLocation 
 
 # Required version for the following packages
-print(f"Duck Hunt version: {dh.__version__} (=1.0.0)")
+print(f"Duck Hunt version: {dh.__version__} (=1.2.0)")
 print(f"OpenCV version: {cv2.__version__} (=4.X)")
 print(f"NumPy version: {np.__version__} (=1.19+)")
 print(f"OpenGym version: {gym.__version__} (=0.18.0)")
@@ -27,7 +27,6 @@ def main(args):
     result = {}
     future = None
     executor = ThreadPoolExecutor(max_workers=1)
-    
     while True:
         """ 
         Use the `current_frame` from either env.step of env.render
@@ -51,16 +50,14 @@ def main(args):
        
         if args.move_type == 'manual':
             #manual mode
-            result["coordinate"] = pygame.mouse.get_pos()
-            result["move_type"] = "absolute" 
+            result = [{"coordinate" : pygame.mouse.get_pos(), 'move_type' : "absolute"}]
         else:
             if future is None:
                 result = noop()
-                future = executor.submit(GetLocation, args.move_type, env)
+                future = executor.submit(GetLocation, args.move_type, env, current_frame)
             elif future.done():
                 result = future.result()
                 future = None
-        
 
         """
         Pass the current location (and location type) you want the "gun" place.

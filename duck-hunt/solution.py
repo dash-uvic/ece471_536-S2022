@@ -6,7 +6,7 @@ Replace following with your own algorithm logic
 Two random coordinate generator has been provided for testing purposes.
 Manual mode where you can use your mouse as also been added for testing purposes.
 """
-def GetLocation(move_type, env):
+def GetLocation(move_type, env, current_frame):
     time.sleep(1) #artificial one second processing time
     
     #Use relative coordinates to the current position of the "gun", defined as an integer below
