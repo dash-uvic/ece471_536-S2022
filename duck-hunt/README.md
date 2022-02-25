@@ -1,6 +1,7 @@
 2022-02-24
 
 * Updated duck_hunt_main.py and solution.py to pass `current_frame` as `env.render()` cannot be used since PyGame is not thread-safe
+* Updated duck_hunt_main.ipynb for solution.py change and, added threaded-version cell with an example on how to save a gif, fixed bug where the loop get running once the pygame had finished, moved the `env` creation inside of the game loop cell to avoid "no video device" pygame error.
 
 
 2022-02-12:  
