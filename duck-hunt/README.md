@@ -1,3 +1,7 @@
+2022-03-27
+
+* Added duck_hunt_main_mp.py that uses multiprocess instead of the threads for faster solution processing.  You **cannot** pass the **env** variable to your GetLocation as it is not serializable.
+
 2022-02-24
 
 * Updated duck_hunt_main.py and solution.py to pass `current_frame` as `env.render()` cannot be used since PyGame is not thread-safe
