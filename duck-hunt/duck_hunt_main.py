@@ -69,7 +69,7 @@ def main(args):
                 info: dict containing current game information (see API guide)
         
         """
-        for res in result:
+        for res in result[:10]:
             coordinate  = res['coordinate']
             move_type   = res['move_type']
             current_frame, level_done, game_done, info = env.step(coordinate, move_type)
