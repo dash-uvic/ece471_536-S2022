@@ -1,4 +1,8 @@
 import time
+import os
+import cv2
+import numpy as np
+import pygame
 
 """
 Replace following with your own algorithm logic
@@ -7,30 +11,20 @@ Two random coordinate generator has been provided for testing purposes.
 Manual mode where you can use your mouse as also been added for testing purposes.
 """
 def GetLocation(move_type, env, current_frame):
-    time.sleep(1) #artificial one second processing time
-    
-    #Use relative coordinates to the current position of the "gun", defined as an integer below
-    if move_type == "relative":
-        """
-        North = 0
-        North-East = 1
-        East = 2
-        South-East = 3
-        South = 4
-        South-West = 5
-        West = 6
-        North-West = 7
-        NOOP = 8
-        """
-        coordinate = env.action_space.sample() 
-    #Use absolute coordinates for the position of the "gun", coordinate space are defined below
-    else:
-        """
-        (x,y) coordinates
-        Upper left = (0,0)
-        Bottom right = (W, H) 
-        """
-        coordinate = env.action_space_abs.sample()
-    
-    return [{'coordinate' : coordinate, 'move_type' : move_type}]
+    templates = []
+    for i in range(1, 9):
+        templates.append("./ims/a" + str(i) + ".png")
+
+    coords = []
+    for templatePath in templates:
+        template = cv2.imread(templatePath, 0)
+        h, w = template.shape
+        result = cv2.matchTemplate(cv2.cvtColor(current_frame, cv2.COLOR_BGR2GRAY), template, cv2.TM_CCOEFF)
+        minVal, maxVal, minLoc, maxLoc = cv2.minMaxLoc(result)
+        location = maxLoc
+
+        botRight = (int(location[1] + w), int(location[0]))
+        coords.append({'coordinate': botRight, 'move_type': move_type})
+
+    return coords
 

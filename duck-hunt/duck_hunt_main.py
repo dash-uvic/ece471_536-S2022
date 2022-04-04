@@ -1,4 +1,5 @@
 import argparse
+import os
 import gym
 import cv2
 import numpy as np
@@ -8,8 +9,10 @@ from concurrent.futures import ThreadPoolExecutor
 import ece471_duckhunt as dh 
 from ece471_duckhunt import envs
 from ece471_duckhunt.envs import duckhunt_env
+from roboflow import Roboflow
 
 from solution import GetLocation 
+from PIL import Image
 
 # Required version for the following packages
 print(f"Duck Hunt version: {dh.__version__} (=1.2.0)")
@@ -27,6 +30,17 @@ def main(args):
     result = {}
     future = None
     executor = ThreadPoolExecutor(max_workers=1)
+    count = 0
+    rf = Roboflow(api_key="4nPzY2IagI8JDYsMayai")
+    project = rf.workspace("c-d").project("duck-hunt-m2oia")
+    dataset = project.version(1).download("tfrecord")
+    data = []
+    for filename in os.listdir("../../dataset/train"):
+        if filename.endswith("jpg"): 
+            # Your code comes here such as 
+            # print(filename)
+            data.append("./Duck-Hunt-1/train/" + filename)
+
     while True:
         """ 
         Use the `current_frame` from either env.step of env.render
@@ -47,17 +61,13 @@ def main(args):
             during the demo this is the setup that will be run.  Example with dummy arguments
             have been provided to you.
         """
-       
-        if args.move_type == 'manual':
-            #manual mode
-            result = [{"coordinate" : pygame.mouse.get_pos(), 'move_type' : "absolute"}]
-        else:
-            if future is None:
-                result = noop()
-                future = executor.submit(GetLocation, args.move_type, env, current_frame)
-            elif future.done():
-                result = future.result()
-                future = None
+
+        if future is None:
+            result = noop()
+            future = executor.submit(GetLocation, "absolute", env, current_frame)
+        elif future.done():
+            result = future.result()
+            future = None
 
         """
         Pass the current location (and location type) you want the "gun" place.
@@ -69,8 +79,9 @@ def main(args):
                 info: dict containing current game information (see API guide)
         
         """
-        for res in result[:10]:
+        for res in result:
             coordinate  = res['coordinate']
+            # print(res)
             move_type   = res['move_type']
             current_frame, level_done, game_done, info = env.step(coordinate, move_type)
             if level_done or game_done:
