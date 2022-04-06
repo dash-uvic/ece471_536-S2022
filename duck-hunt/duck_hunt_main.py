@@ -30,16 +30,6 @@ def main(args):
     result = {}
     future = None
     executor = ThreadPoolExecutor(max_workers=1)
-    count = 0
-    rf = Roboflow(api_key="4nPzY2IagI8JDYsMayai")
-    project = rf.workspace("c-d").project("duck-hunt-m2oia")
-    dataset = project.version(1).download("tfrecord")
-    data = []
-    for filename in os.listdir("../../dataset/train"):
-        if filename.endswith("jpg"): 
-            # Your code comes here such as 
-            # print(filename)
-            data.append("./Duck-Hunt-1/train/" + filename)
 
     while True:
         """ 
